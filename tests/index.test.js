@@ -108,20 +108,70 @@
 // --------------------------------------------------------------------------------------------------------
 // test7
 
+// const parseQuery = require('../src/queryParser.js');
+// const executeSELECTQuery = require('../src/index.js');
+
+// test('Execute SQL Query with Greater Than', async()=> {
+//     const queryWithGT = 'SELECT id FROM student WHERE age> 22';
+//     const result = await executeSELECTQuery(queryWithGT);
+//     expect(result.length).toEqual(2);
+//     expect(result[0]).toHaveProperty('id');
+// });
+
+// test('Execute SQL Query with Not Equal to', async() => {
+//     const queryWithGT = 'SELECT name FROM student WHERE age != 25';
+//     const result = await executeSELECTQuery(queryWithGT);
+//     expect(result.length).toEqual(2);
+//     expect(result[0]).toHaveProperty('name');
+// });
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// test8
+// const{ parseQuery, executeSELECTQuery } = require('../src');
+
+
 const parseQuery = require('../src/queryParser.js');
 const executeSELECTQuery = require('../src/index.js');
 
-test('Execute SQL Query with Greater Than', async()=> {
-    const queryWithGT = 'SELECT id FROM student WHERE age> 22';
-    const result = await executeSELECTQuery(queryWithGT);
-    expect(result.length).toEqual(2);
-    expect(result[0]).toHaveProperty('id');
-});
 
-test('Execute SQL Query with Not Equal to', async() => {
-    const queryWithGT = 'SELECT name FROM student WHERE age != 25';
-    const result = await executeSELECTQuery(queryWithGT);
-    expect(result.length).toEqual(2);
-    expect(result[0]).toHaveProperty('name');
-});
+test('Parse SQL Query with INNER JOIN', ()=> {
+    const query = 'SELECT student.name, enrollment.course FROM student INNER JOIN enrollment ON student.id=enrollment.student_id WHERE student.name = John';
+    const parsed = parseQuery(query); 
+    // const result = await executeSELECTQuery(query);
+
+    expect(parsed).toEqual({
+        fields: ["student.name", "enrollment.course"],
+        table: "student",
+        joinTable : "enrollment",
+
+        joinCondition : {
+        left : "student.id",
+        right : "enrollment.student_id"
+        },
+        "whereClauses": [{
+            field : "student.name",
+            operator : "=",
+            value : 'John'
+        }]
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+})
 

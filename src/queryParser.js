@@ -86,6 +86,9 @@ function parseQuery(query){
     //initialize variables for different parts of the query
     let selectPart, fromPart;
 
+    const whereSplit = query.split(/\WHERE\s/i);
+    query = whereSplit[0];
+
     //split the query at the WHERE clause if it exists
     const whereClause = whereSplit.length > 1 ? whereSplit[1].trim() : null;
 
@@ -136,6 +139,22 @@ function parseQuery(query){
             joinCondition
         };
     }
+
+    function parseWhereClause(whereString) {
+        const conditionRegex = /(.*?)(=|!=|>|<|>=|<=)(.*)/;
+        return whereString.split(/ AND | OR /i).map(conditionString => {
+            const match = conditionString.match(conditionRegex);
+            if (match) {
+                const [, field, operator, value] = match;
+                return { field: field.trim(), operator, value: value.trim() };
+            }
+            throw new Error('Invalid WHERE clause format');
+        });
+    }
+    
+
+module.exports = parseQuery;
+
 
 
     
